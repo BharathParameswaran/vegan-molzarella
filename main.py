@@ -8,7 +8,7 @@ insta_username = 'shakahaar1'
 insta_password = 'LaLaLand@1993X'
 
 # for each post, the following criteria determine if the post will be liked and the owner, followed
-user_potency_ratio = -0.5 # potency_ratio = -1 * following/followers. measure of whether the user is a massive follower
+user_potency_ratio = -0.33 # potency_ratio = -1 * following/followers. measure of whether the user follows their followers
 user_max_followers = 4000
 user_min_followers = 500
 user_min_posts = 10
@@ -22,8 +22,8 @@ comments = ['Nice shot! @{}',
         'I love your profile! @{}',
         'Your feed is an inspiration :thumbsup:',
         'Just incredible :open_mouth:',
-        'Looks awesome @{}',
-        'Getting inspired by you @{}',
+        'Looks awesome @{}!',
+        'Getting inspired by you @{}!',
         ':raised_hands: Yes!']
 
 # hashtags to search
@@ -41,6 +41,8 @@ images_to_checkout = 50
 session = InstaPy(
 	username=insta_username,
 	password=insta_password,
+	want_check_browser=False,
+	disable_image_load=True,
 	headless_browser=False)
 
 with smart_run(session):
@@ -66,10 +68,10 @@ with smart_run(session):
 
   session.set_action_delays(
 	enabled=True,
-	like=2,
-	comment=3,
-	follow=2,
-	unfollow=4,
+	like=5,
+	comment=5,
+	follow=5,
+	unfollow=5,
 	story=10)
 
   session.set_delimit_liking(enabled=True, max_likes=post_max_existing_likes, min_likes=post_min_existing_likes)		
@@ -82,6 +84,7 @@ with smart_run(session):
   session.like_by_tags(hashtags, amount=images_to_checkout, skip_top_posts=False, randomize=True)
   # 2. unfollow nonfollowers 
   session.unfollow_users(amount=20, instapy_followed_enabled=True, instapy_followed_param="nonfollowers", style="FIFO", unfollow_after=48*60*60, sleep_delay=300)
+  session.end()
 
  
   

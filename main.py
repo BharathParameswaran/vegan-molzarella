@@ -1,36 +1,63 @@
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.keys import Keys
-import os
-import time
+# imports
+from instapy import InstaPy
+from instapy import smart_run
 
-class InstagramBot():
-	def __init__(self, email, password):
-		chrome_options = webdriver.ChromeOptions()
-		chrome_options.add_argument("--incognito")
-		self.browser = webdriver.Chrome(executable_path=os.path.abspath("./chromedriver"), chrome_options=chrome_options)
-		self.email = email
-		self.password = password
-    
-	def signIn(self):
-	    self.browser.get('https://www.instagram.com/accounts/login/')
-	    time.sleep(2)
-	    emailInput = self.browser.find_element_by_name('username')
-	    passwordInput = self.browser.find_element_by_name('password')
+# login credentials
+insta_username = ''
+insta_password = ''
 
-	    emailInput.send_keys(self.email)
-	    passwordInput.send_keys(self.password)
-	    passwordInput.send_keys(Keys.ENTER)
-	    time.sleep(3)
-	    buttons = self.browser.find_elements_by_xpath("//*[contains(text(), 'Not Now')]")
-	    for btn in buttons:
-    		btn.click()
+comments = ['Nice shot! @{}',
+        'I love your profile! @{}',
+        'Your feed is an inspiration :thumbsup:',
+        'Just incredible :open_mouth:',
+        'Looks awesome @{}',
+        'Getting inspired by you @{}',
+        ':raised_hands: Yes!']
 
-    def closeBrowser(self):
-        self.browser.close()
+# get an InstaPy session!
+# set headless_browser=True to run InstaPy in the background
+session = InstaPy(username='shakahaar1',
+                  password='LaLaLand@1993X',
+                  headless_browser=False)
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.closeBrowser()
+with smart_run(session):	
+  """ Activity flow """		
+  # general settings		
+  session.set_skip_users(
+  	skip_private=True,
+	private_percentage=100,
+	skip_no_profile_pic=True,
+	no_profile_pic_percentage=100,
+	skip_business=False,
+	skip_non_business=False,
+	business_percentage=0,
+	skip_business_categories=[],
+	dont_skip_business_categories=[])
 
-bot = InstagramBot('shakahaar1', 'LaLaLand@1993X')
-bot.signIn()
+  session.set_relationship_bounds(
+	enabled=True,
+	potency_ratio=-0.5,
+	delimit_by_numbers=True,
+	max_followers=4000,
+	min_followers=500,
+	min_posts=10,
+
+  session.set_action_delays(
+	enabled=True,
+	like=3,
+	comment=5,
+	follow=4.17,
+	unfollow=28,
+	story=10)
+
+  session.set_delimit_liking(enabled=True, max_likes=250, min_likes=40)		
+  session.set_do_comment(enabled=True, percentage=100)
+  session.set_comments(comments, media='Photo')
+  session.set_user_interact(amount=3, randomize=True, percentage=100, media='Photo')
+  session.set_do_follow(enabled=True, percentage=100, times=1)
+  # activity		
+  session.like_by_tags(["veganbrownies"], amount=50, skip_top_posts=True, randomize=True)
+
+  # Joining Engagement Pods
+  
+  

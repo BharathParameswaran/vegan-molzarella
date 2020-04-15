@@ -13,12 +13,12 @@ insta_username = sys.argv[1]
 insta_password = sys.argv[2]
 
 # for each post, the following criteria determine if the post will be liked and the owner, followed
-user_min_potency_ratio = 0.25 # potency_ratio = following/followers. measure of whether the user follows their followers
+user_min_potency_ratio = 0.20 # potency_ratio = following/followers. measure of whether the user follows their followers
 user_max_followers = 3000
-user_min_followers = 200
+user_min_followers = 300
 user_min_posts = 10
-post_min_existing_likes=20
-post_max_existing_likes=300
+post_min_existing_likes=40
+post_max_existing_likes=400
 
 # comment settings
 enable_comments=True
@@ -26,6 +26,10 @@ enable_comments=True
 comments = ['Nice shot! @{}',
         'I love your profile! @{}',
         'Your feed is an inspiration :thumbsup:',
+        'This looks great! :D We also make easy vegan recipes, check us out :)',
+		'WoW :O. Love your feed, very similar to mine :)'
+		'Love the plating! Will use some of you ideas for my next plate :D'
+		'Looks delicious. I also make vegan recipes quarantine simple :D. Check out my feed too!'
         'Just incredible :open_mouth:',
         'Looks awesome @{}!',
         'Getting inspired by you @{}!',
@@ -34,13 +38,14 @@ comments = ['Nice shot! @{}',
 # hashtags to search
 hashtags = ['vegancupcakes', 'veganbrownies', 'vegandessert',
 			'dairyfree', 'plantbased', 'whatveganseat',
-			'thefeedfeedvegan', 'veganfoodspot', 'vegancommunity']
+			'thefeedfeedvegan', 'veganfoodspot', 'vegancommunity', 
+			'instavegan', 'instaveganfood']
 
-# number of images to checkout from each of the above hashtags (NOTE: This isn't the total number of posts that will be liked)
-images_to_checkout = 50
+# number of posts to checkout from each of the above hashtags 
+posts_to_checkout = 5
 
 # randomly `like` other posts in the user's profile before following them. This might encourage them to follow you but would increase the script running time
-interact_with_user = False
+interact_with_user = True
 posts_to_interact_with = 2 # recommended value 1-3. Only relevant if interact_with_user is True
 
 
@@ -52,6 +57,7 @@ session = InstaPy(
 	username=insta_username,
 	password=insta_password,
 	want_check_browser=False,
+	disable_image_load=True,
 	headless_browser=False)
 
 with smart_run(session):
@@ -84,13 +90,14 @@ with smart_run(session):
 	story=10)
 
   session.set_delimit_liking(enabled=True, max_likes=post_max_existing_likes, min_likes=post_min_existing_likes)		
-  session.set_do_comment(enabled=enable_comments, percentage=100)
+  session.set_do_like(enabled=True, percentage=100)
+  session.set_do_comment(enabled=enable_comments, percentage=50)
   session.set_comments(comments, media='Photo')
   session.set_user_interact(amount=posts_to_interact_with, randomize=True, percentage=100, media='Photo')
-  session.set_do_follow(enabled=True, percentage=100, times=1)
+  session.set_mandatory_words(['#vegan', 'vegan', 'VEGAN', 'cooking', 'food'])
   # activity
-  # 1. like posts from hashtags, comment and follows the user
-  session.like_by_tags(hashtags, amount=images_to_checkout, skip_top_posts=False, randomize=True, interact=interact_with_user)
+  # 1. follow users based on tags and like their posts 
+  session.follow_by_tags(hashtags, amount=posts_to_checkout, skip_top_posts=False, randomize=True, interact=interact_with_user)
   # 2. unfollow nonfollowers 
   session.unfollow_users(amount=20, instapy_followed_enabled=True, instapy_followed_param="nonfollowers", style="FIFO", unfollow_after=48*60*60, sleep_delay=300)
   session.end()

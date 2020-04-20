@@ -27,9 +27,9 @@ comments = ['Nice shot! @{}',
         'I love your profile! @{}',
         'Your feed is an inspiration :thumbsup:',
         'This looks great! :D We also make easy vegan recipes, check us out :)',
-		'WoW :O. Love your feed, very similar to mine :)'
-		'Love the plating! Will use some of you ideas for my next plate :D'
-		'Looks delicious. I also make vegan recipes quarantine simple :D. Check out my feed too!'
+		'WoW :O. Love your feed, very similar to mine :)',
+		'Love the plating! Will use some of you ideas for my next plate :D',
+		'Looks delicious. I also make vegan recipes quarantine simple :D. Check out my feed too!',
         'Just incredible :open_mouth:',
         'Looks awesome @{}!',
         'Getting inspired by you @{}!',
